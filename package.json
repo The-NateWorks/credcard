@@ -1,4 +1,7 @@
 {
     "main": "server.js",
-    "module": "commonjs"
+    "module": "commonjs",
+    "dependencies": {
+        "express":"4.22.1"
+    }
 }
