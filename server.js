@@ -12,4 +12,4 @@ var server = http.createServer((req, res) => {
         console.log(data);
     });
 })
-server.listen(3000, "localhost");
+server.listen(3000);
