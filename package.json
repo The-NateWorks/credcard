@@ -1,0 +1,4 @@
+{
+    "main": "server.js",
+    "module": "commonjs"
+}
