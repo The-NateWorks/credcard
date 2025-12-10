@@ -2,10 +2,22 @@
     <head>
         <title>Credit Card Buy</title>
     </head>
-    <body>
-        <form action="POST">
+    <body style="display: flex;align-items: center;justify-content: center;">
+        <form action="/console" method="post">
+            <input type="text" name="user" id="userbox" placeholder="User">
             <input type="text" name="price" placeholder="Price"/>
             <button name="buy">Buy</button>
         </form>
+        <script>
+            var userbox = document.querySelector("#userbox");
+            var pars = location.search.split("?")[1].split("&");
+            var thepar = "";
+            pars.forEach(par => {
+                if (par.includes("user=")) {
+                    thepar = par.split("=")[1];
+                }
+            });
+            userbox.value = thepar;
+        </script>
     </body>
 </html>
