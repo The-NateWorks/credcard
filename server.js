@@ -1,17 +1,11 @@
-const fs = require('fs');
-const path = require('path');
-const http = require('http');
-var server = http.createServer(function (req, res) {
-    if (req.url === '/buy') {
-        res.writeHead(200, {'Content-Type': 'text/html', 'charset':'utf-8' });
-        res.write(fs.readFileSync(path.join(__dirname, "client.html"), 'utf8'));
-        res.end();
-    }
-    
-    req.on('data', (d) => {
-        console.log('Received data:', d.toString());
-    });
+ const express = require('express');
+const app = express();
+const port = 3000;
+
+app.get('/', (req, res) => {
+    res.send('Hello World!');
 });
-server.listen(3000, () => {
-    console.log('Server is listening on port 3000');
+
+app.listen(port, () => {
+    console.log(`Server listening at http://localhost:${port}`);
 });
