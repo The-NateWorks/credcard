@@ -12,4 +12,6 @@ var server = http.createServer((req, res) => {
         console.log(data);
     });
 })
-server.listen(3000);
+server.listen(3000, () => {
+    console.log("listen to me")
+});
