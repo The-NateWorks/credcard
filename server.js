@@ -6,8 +6,9 @@ var users = JSON.parse(fs.readFileSync("users.json","utf8"));
 
 var server = http.createServer((req, res) => {
     if (req.url == "/buy") {
-        res.setHeader("Content-Type", "text/html");
-        res.end(fs.readFileSync(path.join(__dirname, "client.html"), "utf8"));
+        res.writeHead(200, {'Content-Type': 'text/html', 'charset':'utf-8' });
+        res.write(fs.readFileSync(path.join(__dirname, "client.html"), 'utf8'));
+        res.end();
     }
     res.on('data', (data) => {
         console.log(data);
