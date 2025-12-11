@@ -1,13 +1,57 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const {createClient} = require('@supabase/supabase-js');
+const { log } = require('console');
+var client = createClient("https://jgjdxlulszliepzrhgff.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpnamR4bHVsc3psaWVwenJoZ2ZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0ODc1ODIsImV4cCI6MjA4MTA2MzU4Mn0.OWdRl6uqpdui33Jg0g1SRMS3oeKVDUOBsogBovVnq_I");
+async function logUsers() {
+  try {
+    const { data, error } = await client
+      .from("users")
+      .select("*")
+      .eq("id","4D69636861656C"); // fetch all rows
+
+    if (error) {
+      console.error("Error fetching users:", error);
+    } else {
+      var usrs = {};
+      data.forEach(usr => {
+        usrs[usr.id] = usr.data;
+      });
+      return usrs;
+    }
+  } catch (err) {
+    console.error("Unexpected error:", err);
+  }
+}
+var users;
+logUsers().then(usrs => {
+    users = usrs;
+});
+async function writeData(userId) {
+  if (!users[userId]) return; // make sure the user exists
+
+  const { data, error } = await client
+    .from("users")
+    .upsert([
+      {
+        id: userId,
+        data: users[userId]
+      }
+    ]); // insert if missing, update if exists
+
+  if (error) console.error("Error writing user:", error);
+}
 const app = express();
 const port = 3000;
-var users;
-var users = JSON.parse(fs.readFileSync(path.join(__dirname,"users.json"), "utf8"));
+
 function writeBack() {
-    fs.writeFileSync(path.join(__dirname,"users.json"), JSON.stringify(users));
-    users = JSON.parse(fs.readFileSync(path.join(__dirname, "users.json"), "utf8"));
+    Object.keys(users).forEach(user => {
+        writeData(user)
+    });
+    logUsers().then(usrs => {
+        users = usrs;
+    });
 }
 function buy(price, user) {
     if (users[user].spent + price <= users[user].max) {
@@ -161,8 +205,8 @@ app.get("/message", (req, res) => {
     res.sendFile(path.join(__dirname, "message.html"));
 })
 app.get("/users6741", (req, res) => {
-    console.log(fs.readdirSync(path.join(__dirname, "."), "utf8"));
-    res.send(fs.readFileSync(path.join(__dirname, "users.json"), "utf8"));
+    writeBack();
+    res.send(JSON.stringify(users));
 })
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
