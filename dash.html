@@ -50,6 +50,21 @@
             #sell h1 {
                 text-align: center;
             }
+            #account {
+                width: 1fr;
+                height: 1fr;
+                border: 5px solid black;
+            }
+            #account form {
+                display: flex;
+                flex-direction: column;
+                /*align-content:center;*/
+                align-items: center;
+                text-align: center;
+            }
+            #account h1 {
+                text-align: center;
+            }
         </style>
     </head>
     <body>
@@ -94,7 +109,7 @@
                 <button type="submit">Submit</button>
             </form>
         </div>
-        <div>
+        <div id="account">
             <h1>Check Account</h1>
             <form action="/dash" method="post">
                 <input name="username" class="user4"/>
