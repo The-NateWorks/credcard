@@ -2,6 +2,7 @@
     "main": "server.js",
     "module": "commonjs",
     "dependencies": {
-        "express":"4.22.1"
+        "express": "4.22.1",
+        "supabase": "^2.66.0"
     }
 }
