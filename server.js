@@ -18,7 +18,7 @@ function buy(price, user) {
 function upsies(init, rate, time) {
     var price = init;
     for (let i = 0; i < time; i++) {
-        price *= rate;
+        price = (price*rate)+price;
     }
     return price;
 }
@@ -120,7 +120,7 @@ app.post("/dash", (req,res) => {
                 console.log(users[username].investments);
                 if (users[username].investments[name]) {
                     var daysalive = (new Date() - new Date(users[username]["investments"][name].init_start)) / (1000 * 60 * 60 *24);
-                    var message = `The investment ${name} is at $${upsies(users[username].investments[name].init_amount,.20, Math.round(daysalive))+users[username].investments[name].init_amount} and has been around for ${Math.round(daysalive)} days`;
+                    var message = `The investment ${name} is at $${upsies(users[username].investments[name].init_amount,.20, Math.round(daysalive))} and has been around for ${Math.round(daysalive)} days`;
                     res.redirect("./message?message="+message);
                 } else {
                     res.redirect("./message?message=That Investment Does Not exist");
@@ -129,7 +129,7 @@ app.post("/dash", (req,res) => {
                 var name = req.body.sell_name;
                 if (users[username].investments[name]) {
                     var daysalive = (new Date() - new Date(users[username]["investments"][name].init_start)) / (1000 * 60 * 60 *24);
-                    users[username].debt -= (upsies(users[username].investments[name].init_amount,.20, Math.round(daysalive))+users[username].investments[name].init_amount);
+                    users[username].debt -= (upsies(users[username].investments[name].init_amount,.20, Math.round(daysalive)));
                     delete users[username].investments[name];
                     writeBack();
                     res.redirect("./");
