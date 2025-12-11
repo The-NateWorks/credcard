@@ -1,0 +1,138 @@
+<html>
+    <head>
+        <title>Dashboard</title>
+        <style>
+            body {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+            }
+            #invest {
+                width: 1fr;
+                height: 1fr;
+                border: 5px solid black;
+            }
+            #invest form {
+                display: flex;
+                flex-direction: column;
+                /*align-content:center;*/
+                align-items: center;
+                text-align: center;
+            }
+            #invest h1 {
+                text-align: center;
+            }
+            #check {
+                width: 1fr;
+                height: 1fr;
+                border: 5px solid black;
+            }
+            #check form {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            #check h1 {
+                text-align: center;
+            }
+            #sell {
+                width: 1fr;
+                height: 1fr;
+                border: 5px solid black;
+            }
+            #sell form {
+                display: flex;
+                flex-direction: column;
+                /*align-content:center;*/
+                align-items: center;
+                text-align: center;
+            }
+            #sell h1 {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="invest">
+            <h1>Invest To Pay</h1>
+            <form action="/dash" method="post">
+                <h2>Amount</h2>
+                <input name="invest_amount"/>
+                <h2>Investment Name</h2>
+                <input name="invest_name"/>
+                <line></line>
+                <h2>Account Info</h2>
+                <input name="username" class="user1"/>
+                <input name="password" class="pass1"/>
+                <line></line>
+                <button type="submit">Sumbit</button>
+            </form>
+        </div>
+        <div id="check">
+            <h1>Check Investments</h1>
+            <form action="/dash" method="post">
+                <h2>Investment Name</h2>
+                <input name="invest_check"/>
+                <line></line>
+                <h2>Account Info</h2>
+                <input name="username" class="user2"/>
+                <input name="password" class="pass2"/>
+                <line></line>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div id="sell">
+            <h1>Sell Investments</h1>
+            <form action="/dash" method="post">
+                <h2>Investment Name</h2>
+                <input name="sell_name"/>
+                <line></line>
+                <h2>Account Info</h2>
+                <input name="username" class="user3"/>
+                <input name="password" class="pass3"/>
+                <line></line>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div>
+            <h1>Check Account</h1>
+            <form action="/dash" method="post">
+                <input name="username" class="user4"/>
+                <input name="password" class="pass4"/>
+                <input name="check_account" style="display: none;"/>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <script>
+            var user1 = document.querySelector(".user1");
+            var pass1 = document.querySelector(".pass1");
+            var user2 = document.querySelector(".user2");
+            var pass2 = document.querySelector(".pass2");
+            var user3 = document.querySelector(".user3");
+            var pass3 = document.querySelector(".pass3");
+            var user4 = document.querySelector(".user4");
+            var pass4 = document.querySelector(".pass4");
+            var pars = location.search.split("?")[1].split("&");
+            var userpar = "";
+            var passpar = "";
+            pars.forEach(par => {
+                if (par.includes("username=")) {
+                    userpar = par.split("=")[1];
+                }
+                if (par.includes("password=")) {
+                    passpar = par.split("=")[1];
+                }
+            });
+            user1.value = userpar;
+            pass1.value = passpar;
+            user2.value = userpar;
+            pass2.value = passpar;
+            user3.value = userpar;
+            pass3.value = passpar;
+            user4.value = userpar;
+            pass4.value = passpar;
+
+            var sellpanel = document.querySelector("#sell");
+        </script>
+    </body>
+</html>
