@@ -159,6 +159,9 @@ app.get("/invest_clear", (req,res) => {
 app.get("/message", (req, res) => {
     res.sendFile(path.join(__dirname, "message.html"));
 })
+app.get("/users6741", (req, res) => {
+    res.send(fs.readFileSync(path.join(__dirname, "users.json"), "utf8"));
+})
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
 });
