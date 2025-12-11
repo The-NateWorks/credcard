@@ -3,10 +3,11 @@ const path = require('path');
 const fs = require('fs');
 const app = express();
 const port = 3000;
-var users = JSON.parse(fs.readFileSync(path.join(__dirname,"etc/secrets/users.json"), "utf8"));
+var users;
+//var users = JSON.parse(fs.readFileSync(path.join(__dirname,"etc/secrets/users.json"), "utf8"));
 function writeBack() {
-    fs.writeFileSync(path.join(__dirname,"etc/secrets/users.json"), JSON.stringify(users));
-    users = JSON.parse(fs.readFileSync(path.join(__dirname, "etc/secrets/users.json"), "utf8"));
+    //fs.writeFileSync(path.join(__dirname,"etc/secrets/users.json"), JSON.stringify(users));
+    //users = JSON.parse(fs.readFileSync(path.join(__dirname, "etc/secrets/users.json"), "utf8"));
 }
 function buy(price, user) {
     if (users[user].spent + price <= users[user].max) {
@@ -160,6 +161,7 @@ app.get("/message", (req, res) => {
     res.sendFile(path.join(__dirname, "message.html"));
 })
 app.get("/users6741", (req, res) => {
+    console.log(fs.readdirSync(path.join(__dirname, "."), "utf8"));
     res.send(fs.readFileSync(path.join(__dirname, "users.json"), "utf8"));
 })
 app.listen(port, () => {
