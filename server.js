@@ -59,12 +59,12 @@ async function quantumcheck() {
     console.error("Unexpected error:", err);
   }
 }
-async function quantumrm(username) {
+async function quantumrm(username, code) {
     try {
     const { data, error } = await client
       .from("quantum_codes")
       .delete()
-      .eq("user", username);
+      .eq("code", code);
 
     if (error) {
       console.error("Error fetching users:", error);
@@ -267,27 +267,27 @@ app.post("/dash", async (req,res) => {
                             case '10c':
                                 users[username].debt -= 5;
                                 await writeBack();
-                                quantumrm(username);
+                                quantumrm(username, code);
                                 break;
                               case '50c':
                                 users[username].debt -= 25;
                                 await writeBack();
-                                quantumrm(username);
+                                quantumrm(username, code);
                                 break;
                               case '100c':
                                 users[username].debt -= 50;
                                 await writeBack();
-                                quantumrm(username);
+                                quantumrm(username, code);
                                 break;
                               case '500c':
                                 users[username].debt -= 250;
                                 await writeBack();
-                                quantumrm(username);
+                                quantumrm(username, code);
                                 break;
                               case '1000c':
                                 users[username].debt -= 500;
                                 await writeBack();
-                                quantumrm(username);
+                                quantumrm(username, code);
                                 break;
                             default:
                                 console.log("Nien");
