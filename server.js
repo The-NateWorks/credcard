@@ -159,7 +159,7 @@ app.post("/dash", (req,res) => {
                 var amount = parseInt(req.body.invest_amount);
                 users[username].investments[req.body.invest_name] = {init_amount:amount, init_start:new Date()};
                 buy(amount, username);
-                res.redirect("./");
+                res.redirect(`/dash?username=${username}&password=${password}`);
             } else if (req.body.invest_check != undefined) {
                 var name = req.body.invest_check;
                 console.log(users[username].investments);
@@ -177,7 +177,7 @@ app.post("/dash", (req,res) => {
                     users[username].debt -= (upsies(users[username].investments[name].init_amount,.20, Math.round(daysalive)));
                     delete users[username].investments[name];
                     writeBack();
-                    res.redirect("./");
+                    res.redirect(`/dash?username=${username}&password=${password}`);
                 } else {
                     res.redirect("./message?message=That Investment Does Not exist");
                 }
