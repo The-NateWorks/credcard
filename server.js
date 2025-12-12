@@ -293,6 +293,7 @@ app.post("/dash", async (req,res) => {
                                 console.log("Nien");
                                 break;
                         }
+                        res.redirect(`/dash?username=${username}&password=${password}`);
                     } else {
                         console.log("Incorrecet user proper is"+allowed)
                         res.redirect(`/dash?username=${username}&password=${password}`);

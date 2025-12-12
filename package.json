@@ -1,5 +1,6 @@
 {
     "main": "server.js",
+    "module": "commonjs",
     "dependencies": {
         "@supabase/supabase-js": "^2.87.1",
         "express": "4.22.1",
