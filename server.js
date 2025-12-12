@@ -95,7 +95,7 @@ app.post("/console", (req, res) => {
 app.get("/", (req,res) => {
     res.sendFile(path.join(__dirname, "main.html"));
 })
-app.post("/", (req, res) => {
+app.post("/", async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     console.log(req.body)
@@ -139,7 +139,7 @@ app.post("/", (req, res) => {
                 "investments":{},
                 "password":password
             }
-            writeBack();
+            await writeBack();
             res.redirect(`/dash?username=${username}&password=${password}`)
         }
     }
