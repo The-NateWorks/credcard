@@ -9,7 +9,7 @@ async function logUsers() {
     const { data, error } = await client
       .from("users")
       .select("*")
-      .eq("id","4D69636861656C"); // fetch all rows
+      //.eq("id","4D69636861656C"); // fetch all rows
 
     if (error) {
       console.error("Error fetching users:", error);
@@ -45,11 +45,11 @@ async function writeData(userId) {
 const app = express();
 const port = 3000;
 
-function writeBack() {
-    Object.keys(users).forEach(user => {
-        writeData(user)
+async function writeBack() {
+    Object.keys(users).forEach(async user => {
+        await writeData(user)
     });
-    logUsers().then(usrs => {
+    await logUsers().then(usrs => {
         users = usrs;
     });
 }
