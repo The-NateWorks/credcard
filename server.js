@@ -4,6 +4,7 @@ const fs = require('fs');
 const {createClient} = require('@supabase/supabase-js');
 const { log } = require('console');
 var client = createClient("https://jgjdxlulszliepzrhgff.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpnamR4bHVsc3psaWVwenJoZ2ZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0ODc1ODIsImV4cCI6MjA4MTA2MzU4Mn0.OWdRl6uqpdui33Jg0g1SRMS3oeKVDUOBsogBovVnq_I");
+
 async function logUsers() {
   try {
     const { data, error } = await client
@@ -24,10 +25,56 @@ async function logUsers() {
     console.error("Unexpected error:", err);
   }
 }
+async function writeData(userId) {
+  if (!users[userId]) return; // make sure the user exists
+
+  const { data, error } = await client
+    .from("users")
+    .upsert([
+      {
+        id: userId,
+        data: users[userId]
+      }
+    ]); // insert if missing, update if exists
+
+  if (error) console.error("Error writing user:", error);
+}
 var users;
 logUsers().then(usrs => {
     users = usrs;
 });
+async function quantumcheck() {
+    try {
+    const { data, error } = await client
+      .from("quantum_codes")
+      .select("*");
+      console.log(data);
+
+    if (error) {
+      console.error("Error fetching users:", error);
+    } else {
+      return data;
+    }
+  } catch (err) {
+    console.error("Unexpected error:", err);
+  }
+}
+async function quantumrm(username) {
+    try {
+    const { data, error } = await client
+      .from("quantum_codes")
+      .delete()
+      .eq("user", username);
+
+    if (error) {
+      console.error("Error fetching users:", error);
+    } else {
+      return data;
+    }
+  } catch (err) {
+    console.error("Unexpected error:", err);
+  }
+}
 async function writeData(userId) {
   if (!users[userId]) return; // make sure the user exists
 
@@ -44,14 +91,26 @@ async function writeData(userId) {
 }
 const app = express();
 const port = 3000;
-
+setInterval(async () => {
+  var tempdate = new Date();
+  var datear = tempdate.toString().split(" ");
+  if (datear[2] == "1" && datear[4] == "00:00:00") {
+    console.log("Reset");
+    var names = Object.keys(users);
+    for (let i = 0; i < names.length; i++) {
+      users[names[i]].spent = 0;
+      await writeBack();
+    }
+  }
+}, 500);
 async function writeBack() {
-    Object.keys(users).forEach(async user => {
-        await writeData(user)
-    });
-    await logUsers().then(usrs => {
-        users = usrs;
-    });
+  // save all user objects to the database
+  for (const userId of Object.keys(users)) {
+      await writeData(userId);
+  }
+
+  // reload from DB AFTER all writes finish
+  users = await logUsers();
 }
 function buy(price, user) {
     if (users[user].spent + price <= users[user].max) {
@@ -148,7 +207,7 @@ app.post("/", async (req, res) => {
 app.get("/dash", (req,res) => {
     res.sendFile(path.join(__dirname, "dash.html"));
 });
-app.post("/dash", (req,res) => {
+app.post("/dash", async (req,res) => {
     console.log(req.body);
     if (req.body.username && req.body.password) {
         var username = req.body.username;
@@ -189,6 +248,57 @@ app.post("/dash", (req,res) => {
                 var pw = account.password;
                 var mess = `Account of ${username}:<br>Dept: $${dept}<br>Spendings: $${spent}/$${max}<br>Password: ${pw}`;
                 res.redirect("./message?message="+mess);
+            } else if (req.body.quan_code != undefined) {
+                var allowed;
+                var code = req.body.quan_code;
+                var codeType;
+                await quantumcheck().then(async data => {
+                    data.forEach(dati => {
+                        if (dati.code == code) {
+                            console.log("correct dati");
+                            allowed = dati.user;
+                            codeType = dati.id;
+                        } else {
+                            console.log("Incrooect Dati")
+                        }
+                    });
+                    if (username == allowed) {
+                        switch(codeType) {
+                            case '10c':
+                                users[username].debt -= 5;
+                                await writeBack();
+                                quantumrm(username);
+                                break;
+                              case '50c':
+                                users[username].debt -= 25;
+                                await writeBack();
+                                quantumrm(username);
+                                break;
+                              case '100c':
+                                users[username].debt -= 50;
+                                await writeBack();
+                                quantumrm(username);
+                                break;
+                              case '500c':
+                                users[username].debt -= 250;
+                                await writeBack();
+                                quantumrm(username);
+                                break;
+                              case '1000c':
+                                users[username].debt -= 500;
+                                await writeBack();
+                                quantumrm(username);
+                                break;
+                            default:
+                                console.log("Nien");
+                                break;
+                        }
+                    } else {
+                        console.log("Incorrecet user proper is"+allowed)
+                        res.redirect(`/dash?username=${username}&password=${password}`);
+                    }
+                });
+                
             }
         } else {
             res.redirect("./message?message=Incorrect Username or Password");

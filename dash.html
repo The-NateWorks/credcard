@@ -65,6 +65,21 @@
             #account h1 {
                 text-align: center;
             }
+            #quantum {
+                width: 1fr;
+                height: 1fr;
+                border: 5px solid black;
+            }
+            #quantum form {
+                display: flex;
+                flex-direction: column;
+                /*align-content:center;*/
+                align-items: center;
+                text-align: center;
+            }
+            #quantum h1 {
+                text-align: center;
+            }
         </style>
     </head>
     <body>
@@ -118,6 +133,19 @@
                 <button type="submit">Submit</button>
             </form>
         </div>
+        <div id="quantum">
+            <h1>Quantum Clicker Codes</h1>
+            <form action="/dash" method="post">
+                <h2>Quantum Code</h2>
+                <input name="quan_code"/>
+                <line></line>
+                <h2>Account Info</h2>
+                <input name="username" class="user5"/>
+                <input name="password" class="pass5"/>
+                <button type="submit">Submit</button>
+                
+            </form>
+        </div>
         <script>
             var user1 = document.querySelector(".user1");
             var pass1 = document.querySelector(".pass1");
@@ -127,6 +155,8 @@
             var pass3 = document.querySelector(".pass3");
             var user4 = document.querySelector(".user4");
             var pass4 = document.querySelector(".pass4");
+            var user5 = document.querySelector(".user5");
+            var pass5 = document.querySelector(".pass5");
             var pars = location.search.split("?")[1].split("&");
             var userpar = "";
             var passpar = "";
@@ -146,6 +176,8 @@
             pass3.value = passpar;
             user4.value = userpar;
             pass4.value = passpar;
+            user5.value = userpar;
+            pass5.value = passpar;
 
             var sellpanel = document.querySelector("#sell");
         </script>
